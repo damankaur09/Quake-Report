@@ -38,9 +38,22 @@ public class EarthquakeArrayAdapter extends ArrayAdapter<Earthquake>
 
         magnitude.setText(cuurentQuake.getMagnitude());
 
-        TextView place=(TextView)listView.findViewById(R.id.place_view);
+        TextView km=(TextView)listView.findViewById(R.id.km_view);
+        TextView eplace=(TextView)listView.findViewById(R.id.place_view);
+        String location=cuurentQuake.getPlace();
+        if(location.contains("of")) {
+            int index=location.indexOf("of");
 
-        place.setText(cuurentQuake.getPlace());
+            km.setText(location.substring(0,index+2));
+
+            eplace.setText(location.substring(index+2,location.length()-1));
+        }
+        else
+        {
+            km.setText("Near the");
+            eplace.setText(location);
+        }
+
 
         //convert the time in milliseconds into a Date object by calling the Date constructor
         Date dateObject=new Date(cuurentQuake.getDateTime());
