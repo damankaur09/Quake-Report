@@ -42,7 +42,7 @@ public class EarthquakeArrayAdapter extends ArrayAdapter<Earthquake>
 
         TextView date=(TextView)listView.findViewById(R.id.date_view);
 
-        date.setText(cuurentQuake.getDate());
+        date.setText(Integer.toString(cuurentQuake.getTime()));
 
 
 
