@@ -16,6 +16,8 @@ import java.util.Date;
  */
 public class EarthquakeArrayAdapter extends ArrayAdapter<Earthquake>
 {
+    //location separator
+    private static final String LOCATION_SEPARATOR = " of ";
     public EarthquakeArrayAdapter(Activity context, ArrayList<Earthquake> earthquakes) {
         super(context,0, earthquakes);
     }
@@ -38,20 +40,26 @@ public class EarthquakeArrayAdapter extends ArrayAdapter<Earthquake>
 
         magnitude.setText(cuurentQuake.getMagnitude());
 
-        TextView km=(TextView)listView.findViewById(R.id.km_view);
-        TextView eplace=(TextView)listView.findViewById(R.id.place_view);
-        String location=cuurentQuake.getPlace();
-        if(location.contains("of")) {
-            int index=location.indexOf("of");
+       //origional location of earthquake
+        String origionalLoc=cuurentQuake.getPlace();
 
-            km.setText(location.substring(0,index+2));
+        //text view show distance of earthquake
+        TextView primaryLoc=(TextView)listView.findViewById(R.id.km_view);
+        //text view shows name of place where earthquake occurred
+        TextView locationOffset=(TextView)listView.findViewById(R.id.place_view);
 
-            eplace.setText(location.substring(index+2,location.length()-1));
+        if(origionalLoc.contains(LOCATION_SEPARATOR)) {
+
+            String [] parts=origionalLoc.split(LOCATION_SEPARATOR);
+
+            primaryLoc.setText(parts[0]+LOCATION_SEPARATOR);
+
+            locationOffset.setText(parts[1]);
         }
         else
         {
-            km.setText("Near the");
-            eplace.setText(location);
+            primaryLoc.setText("Near the");
+            locationOffset.setText(origionalLoc);
         }
 
 
