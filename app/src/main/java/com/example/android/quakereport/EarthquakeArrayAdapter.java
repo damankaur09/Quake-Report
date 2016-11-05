@@ -1,6 +1,8 @@
 package com.example.android.quakereport;
 
 import android.app.Activity;
+import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +38,22 @@ public class EarthquakeArrayAdapter extends ArrayAdapter<Earthquake>
         }
 
 
-
+        //Magnitude of Earthquake
         TextView magnitude=(TextView)listView.findViewById(R.id.magnitude_view);
+        // Set the proper background color on the magnitude circle.
+        // Fetch the background from the TextView, which is a GradientDrawable.
+        GradientDrawable magnitudeCircle=(GradientDrawable)magnitude.getBackground();
+
+        int magnitudeColor=getMagnitudeColor(cuurentQuake.getMagnitude());
+
+        magnitudeCircle.setColor(magnitudeColor);
 
         //use decimal formatter so that 0.0 value shown in this format
         DecimalFormat decimalFormat=new DecimalFormat("0.0");
         String output=decimalFormat.format(cuurentQuake.getMagnitude());
         magnitude.setText(output);
 
+        //Place of Earthquake
        //origional location of earthquake
         String origionalLoc=cuurentQuake.getPlace();
 
@@ -66,7 +76,7 @@ public class EarthquakeArrayAdapter extends ArrayAdapter<Earthquake>
             locationOffset.setText(origionalLoc);
         }
 
-
+        //Date and Time of Earthquake
         //convert the time in milliseconds into a Date object by calling the Date constructor
         Date dateObject=new Date(cuurentQuake.getDateTime());
         //date
@@ -86,5 +96,48 @@ public class EarthquakeArrayAdapter extends ArrayAdapter<Earthquake>
 
 
         return listView;
+    }
+    private int getMagnitudeColor(double mag)
+    {
+        int colorID=-1;
+        int magnitude=(int)Math.floor(mag);
+
+        switch (magnitude){
+            case 0:
+                colorID=R.color.magnitude1;
+                break;
+            case 1:
+                colorID=R.color.magnitude1;
+                break;
+            case 2:
+                colorID=R.color.magnitude2;
+                break;
+            case 3:
+                colorID=R.color.magnitude3;
+                break;
+            case 4:
+                colorID=R.color.magnitude4;
+                break;
+            case 5:
+                colorID=R.color.magnitude5;
+                break;
+            case 6:
+                colorID=R.color.magnitude6;
+                break;
+            case 7:
+                colorID=R.color.magnitude7;
+                break;
+            case 8:
+                colorID=R.color.magnitude8;
+                break;
+            case 9:
+                colorID=R.color.magnitude9;
+                break;
+            case 10:
+                colorID=R.color.magnitude10plus;
+                break;
+        }
+        System.out.println("colorID = " + colorID);
+        return ContextCompat.getColor(getContext(),colorID);
     }
 }
