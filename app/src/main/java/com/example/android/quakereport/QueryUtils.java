@@ -59,10 +59,11 @@ public class QueryUtils
                 double magnitude=Double.parseDouble(a.getString("mag"));
                 String place=a.getString("place");
                 long milliseconds=a.getLong("time");
+                String url=a.getString("url");
 
-
-                earthquakes.add(new Earthquake(magnitude,place,milliseconds));
+                earthquakes.add(new Earthquake(magnitude,place,milliseconds,url));
             }
+
 
 
 
