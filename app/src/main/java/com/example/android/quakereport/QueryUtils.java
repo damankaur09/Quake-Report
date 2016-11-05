@@ -6,7 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Daman on 03-Nov-2016.
@@ -59,8 +61,10 @@ public class QueryUtils
                 JSONObject a=prop.getJSONObject("properties");
                 String magnitude=a.getString("mag");
                 String place=a.getString("place");
-                int time=a.getInt("time");
-                earthquakes.add(new Earthquake(magnitude,place,time));
+                long milliseconds=a.getLong("time");
+
+
+                earthquakes.add(new Earthquake(magnitude,place,milliseconds));
             }
 
 

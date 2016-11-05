@@ -7,12 +7,12 @@ public class Earthquake
 {
     private String magnitude;
     private String place;
-    private int time;
+    private long datetime;
 
-    public Earthquake(String magnitude, String place, int time) {
+    public Earthquake(String magnitude, String place, long datetime) {
         this.place = place;
         this.magnitude = magnitude;
-        this.time = time;
+        this.datetime = datetime;
     }
 
     public String getMagnitude() {
@@ -23,7 +23,7 @@ public class Earthquake
         return place;
     }
 
-    public int getTime() {
-        return time;
+    public long getDateTime() {
+        return datetime;
     }
 }
