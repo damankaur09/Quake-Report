@@ -3,7 +3,7 @@ package com.example.android.quakereport;
 /**
  * Created by Daman on 03-Nov-2016.
  */
-public class Earthquake
+public class Earthquake implements Comparable<Earthquake>
 {
     private double magnitude;
     private String place;
@@ -34,5 +34,13 @@ public class Earthquake
 
     public String getUrl() {
         return url;
+    }
+
+    @Override
+    public int compareTo(Earthquake o) {
+        Double x=this.getMagnitude();
+        Double y=o.getMagnitude();
+
+        return y.compareTo(x);
     }
 }
