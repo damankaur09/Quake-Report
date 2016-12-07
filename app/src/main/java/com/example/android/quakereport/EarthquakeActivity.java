@@ -36,6 +36,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
     private TextView emptyView;
 
+
     /**
      * Constant value for the earthquake loader ID. We can choose any integer.
      * This really only comes into play if you're using multiple loaders.
@@ -67,6 +68,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         earthquakeListView.setEmptyView(emptyView);
 
         adapter=new EarthquakeArrayAdapter(this,new ArrayList<Earthquake>());
+
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
@@ -104,12 +106,16 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> data) {
         Log.i(LOG_TAG,"Test: EarthquakeActivity onLoadFinished() called");
 
+        //hide loading indicator
+        View loadingIndicator=findViewById(R.id.loading_spinner);
+        loadingIndicator.setVisibility(View.GONE);
+
         emptyView.setText(R.string.no_earthquake);
         adapter.clear();
 
         if(data!=null && !data.isEmpty())
         {
-            //adapter.addAll(data);
+            adapter.addAll(data);
         }
     }
 
