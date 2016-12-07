@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ import java.util.List;
 public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
+
+    private TextView emptyView;
 
     /**
      * Constant value for the earthquake loader ID. We can choose any integer.
@@ -47,29 +50,6 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     // Create a new {@link ArrayAdapter} of earthquakes
     EarthquakeArrayAdapter adapter=null;
 
-    @Override
-    public Loader<List<Earthquake>> onCreateLoader(int id, Bundle args) {
-        Log.i(LOG_TAG,"Test: EarthquakeActivity onCreateLoader() called");
-        return new EarthquakeLoader(this,SAMPLE_JSON_RESPONSE);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> data) {
-        Log.i(LOG_TAG,"Test: EarthquakeActivity onLoadFinished() called");
-        adapter.clear();
-
-        if(data!=null && !data.isEmpty())
-        {
-            adapter.addAll(data);
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Earthquake>> loader) {
-        Log.i(LOG_TAG,"Test: EarthquakeActivity onLoadReset() called");
-        adapter.clear();
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +61,10 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
+
+        emptyView=(TextView)findViewById(R.id.empty_view);
+
+        earthquakeListView.setEmptyView(emptyView);
 
         adapter=new EarthquakeArrayAdapter(this,new ArrayList<Earthquake>());
 
@@ -108,6 +92,31 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         // because this activity implements the LoaderCallbacks interface).
         Log.i(LOG_TAG,"Test: initLoader() called");
         loaderManager.initLoader(EARTHQUAKE_LOADER_ID,null,this);
+    }
+
+    @Override
+    public Loader<List<Earthquake>> onCreateLoader(int id, Bundle args) {
+        Log.i(LOG_TAG,"Test: EarthquakeActivity onCreateLoader() called");
+        return new EarthquakeLoader(this,SAMPLE_JSON_RESPONSE);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> data) {
+        Log.i(LOG_TAG,"Test: EarthquakeActivity onLoadFinished() called");
+
+        emptyView.setText(R.string.no_earthquake);
+        adapter.clear();
+
+        if(data!=null && !data.isEmpty())
+        {
+            //adapter.addAll(data);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Earthquake>> loader) {
+        Log.i(LOG_TAG,"Test: EarthquakeActivity onLoadReset() called");
+        adapter.clear();
     }
 
 
