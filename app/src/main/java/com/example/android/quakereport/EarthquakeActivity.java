@@ -15,11 +15,13 @@
  */
 package com.example.android.quakereport;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -27,19 +29,52 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EarthquakeActivity extends AppCompatActivity {
+public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
+
+    /**
+     * Constant value for the earthquake loader ID. We can choose any integer.
+     * This really only comes into play if you're using multiple loaders.
+     */
+
+    private final static  int EARTHQUAKE_LOADER_ID=1;
 
     /** Sample JSON response for a USGS query */
     private static final String SAMPLE_JSON_RESPONSE =
 
-            "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2016-01-01&endtime=2016-01-31&minmag=0&limit=1000";
+            "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
     // Create a new {@link ArrayAdapter} of earthquakes
     EarthquakeArrayAdapter adapter=null;
 
     @Override
+    public Loader<List<Earthquake>> onCreateLoader(int id, Bundle args) {
+        Log.i(LOG_TAG,"Test: EarthquakeActivity onCreateLoader() called");
+        return new EarthquakeLoader(this,SAMPLE_JSON_RESPONSE);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> data) {
+        Log.i(LOG_TAG,"Test: EarthquakeActivity onLoadFinished() called");
+        adapter.clear();
+
+        if(data!=null && !data.isEmpty())
+        {
+            adapter.addAll(data);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Earthquake>> loader) {
+        Log.i(LOG_TAG,"Test: EarthquakeActivity onLoadReset() called");
+        adapter.clear();
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Log.i(LOG_TAG,"Test: EarthquakeActivity onCreate() called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
@@ -53,6 +88,7 @@ public class EarthquakeActivity extends AppCompatActivity {
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
 
+
         earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -63,49 +99,17 @@ public class EarthquakeActivity extends AppCompatActivity {
             }
         });
 
-        EarthQuakeAsync task=new EarthQuakeAsync();
-        task.execute(SAMPLE_JSON_RESPONSE);
+
+        // Get a reference to the LoaderManager, in order to interact with loaders.
+        LoaderManager loaderManager=getLoaderManager();
+
+        // Initialize the loader. Pass in the int ID constant defined above and pass in null for
+        // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
+        // because this activity implements the LoaderCallbacks interface).
+        Log.i(LOG_TAG,"Test: initLoader() called");
+        loaderManager.initLoader(EARTHQUAKE_LOADER_ID,null,this);
     }
 
 
-    private class EarthQuakeAsync extends AsyncTask<String,Void,List<Earthquake>>
-    {
-        /**
-         * This method runs on a background thread and performs the network request.
-         * We should not update the UI from a background thread, so we return a list of
-         * {@link Earthquake}s as the result.
-         */
-        @Override
-        protected List<Earthquake> doInBackground(String... urls) {
-            if(urls.length<1||urls[0]==null)
-            {
-                return null;
-            }
-            List<Earthquake> result=QueryUtils.fetchEarthquakeData(urls[0]);
-
-            return result;
-        }
-
-
-        /**
-         * This method runs on the main UI thread after the background work has been
-         * completed. This method receives as input, the return value from the doInBackground()
-         * method. First we clear out the adapter, to get rid of earthquake data from a previous
-         * query to USGS. Then we update the adapter with the new list of earthquakes,
-         * which will trigger the ListView to re-populate its list items.
-         */
-
-        @Override
-        protected void onPostExecute(List<Earthquake> earthquakes) {
-            // Clear the adapter of previous earthquake data
-            adapter.clear();
-            // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
-            // data set. This will trigger the ListView to update.
-            if(earthquakes!=null && !earthquakes.isEmpty())
-            {
-
-                adapter.addAll(earthquakes);
-            }
-        }
-    }
 }
+
