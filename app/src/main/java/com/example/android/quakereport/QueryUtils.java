@@ -16,7 +16,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -66,7 +65,7 @@ public class QueryUtils
         }
 
         List<Earthquake> earthquakes=extractFeatureFromJSON(jsonResponse);
-        Collections.sort(earthquakes);
+        //Collections.sort(earthquakes);
 
         return earthquakes;
     }
