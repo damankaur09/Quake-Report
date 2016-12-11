@@ -37,7 +37,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
+public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>>,SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
@@ -81,6 +81,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
 
+        SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
+
+        prefs.registerOnSharedPreferenceChangeListener(this);
 
         earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -118,6 +121,25 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         }
 
 
+
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if(key.equals(getString(R.string.settings_min_magnitude_key))||key.equals(getString(R.string.settings_order_by_key)))
+        {
+            adapter.clear();
+
+            emptyView.setVisibility(View.GONE);
+
+            // Show the loading indicator while new data is being fetched
+            View loadingIndicator=findViewById(R.id.loading_spinner);
+            loadingIndicator.setVisibility(View.VISIBLE);
+
+            // Restart the loader to requery the USGS as the query settings have been updated
+            getLoaderManager().restartLoader(EARTHQUAKE_LOADER_ID,null,this);
+        }
 
     }
 
